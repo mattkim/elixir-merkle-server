@@ -1,21 +1,31 @@
 # MerkleWordServer
 
-**TODO: Add description**
+Validates messages sent as merkle proofs.
 
-## Installation
+## Testing
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `merkle_word_server` to your list of dependencies in `mix.exs`:
+To run tests do:
 
-```elixir
-def deps do
-  [
-    {:merkle_word_server, "~> 0.1.0"}
-  ]
-end
+```
+mix test
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/merkle_word_server](https://hexdocs.pm/merkle_word_server).
+## Gen Server
+
+To interact with gen server do:
+
+```
+iex -S mix
+
+alias MerkleWordServer.Registry, as: Registry
+
+{:ok, registry} = Registry.start_link([])
+
+mt = Registry.create_merkle(["a", "b", "c", "d"])
+proof = Registry.create_proof(mt, 1)
+
+Registry.reset(registry, mt.root().value)
+Registry.push(registry, elem(proof, 0), elem(proof, 1), elem(proof, 2))
+Registry.get_blocks(registry)
+```
 
