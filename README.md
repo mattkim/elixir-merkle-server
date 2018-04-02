@@ -12,11 +12,15 @@ mix test
 
 ## Gen Server
 
-To interact with gen server do:
+To interact with gen server run the interactive shell:
 
 ```
 iex -S mix
+```
 
+Run the following commands to interact with the gen server:
+
+```
 alias MerkleWordServer.Registry, as: Registry
 
 {:ok, registry} = Registry.start_link([])
@@ -28,4 +32,3 @@ Registry.reset(registry, mt.root().value)
 Registry.push(registry, elem(proof, 0), elem(proof, 1), elem(proof, 2))
 Registry.get_blocks(registry)
 ```
-
