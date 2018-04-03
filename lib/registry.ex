@@ -88,7 +88,9 @@ defmodule MerkleWordServer.Registry do
     def handle_call({:reset, root}, _from, state) do
         Validator.validate_root(root)
         merkle = state.merkle
+        blocks = state.blocks
         Merkle.set(merkle, root)
+        Blocks.reset(blocks)
         {:reply, {:ok, root}, state}
     end
   end

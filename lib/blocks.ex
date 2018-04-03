@@ -107,4 +107,11 @@ defmodule MerkleWordServer.Blocks do
   def get(blocks) do
     Agent.get(blocks, &fn x -> x end.(&1))
   end
+
+  @doc """
+  Reset the entire map.
+  """
+  def reset(blocks) do
+    Agent.update(blocks, &fn x -> %{} end.(&1))
+  end
 end

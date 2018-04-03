@@ -13,7 +13,6 @@ defmodule MerkleWordServer.RegistryTest do
         mt = Merkle.create_merkle(["a", "b", "c", "d"])
         proof = Merkle.create_proof(mt, 1)
         
-        # TODO: might be a race condition here actually.
         result = Registry.reset(registry, mt.root().value)
 
         assert result == {:ok, "58c89d709329eb37285837b042ab6ff72c7c8f74de0446b091b6a0131c102cfd"}
@@ -52,16 +51,21 @@ defmodule MerkleWordServer.RegistryTest do
         assert Registry.get_blocks(registry)  == {:ok, ["a", "b", "c", "d"]}
     end
 
-    test "Test index out of bounds" do
+    test "Test resets clear blocks.", %{registry: registry} do
         mt = Merkle.create_merkle(["a", "b", "c", "d"])
+        Registry.reset(registry, mt.root().value)
 
-        assert_raise RuntimeError, fn ->
-            Merkle.create_proof(mt, -1)
-        end
-
-        assert_raise RuntimeError, fn ->
-            Merkle.create_proof(mt, 5)
-        end
+        proof = Merkle.create_proof(mt, 0)
+        Registry.push(registry, elem(proof, 0), elem(proof, 1), elem(proof, 2))
+        proof = Merkle.create_proof(mt, 3)
+        Registry.push(registry, elem(proof, 0), elem(proof, 1), elem(proof, 2))
+        proof = Merkle.create_proof(mt, 2)
+        Registry.push(registry, elem(proof, 0), elem(proof, 1), elem(proof, 2))
+        proof = Merkle.create_proof(mt, 1)
+        Registry.push(registry, elem(proof, 0), elem(proof, 1), elem(proof, 2))
+        
+        Registry.reset(registry, mt.root().value)
+        assert Registry.get_blocks(registry)  == {:ok, []}
     end
 
     test "Test bad blocks, index, and proof", %{registry: registry} do
