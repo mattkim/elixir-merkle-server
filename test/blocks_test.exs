@@ -52,4 +52,18 @@ defmodule MerkleWordServer.BlocksTest do
 
     assert e == [nil, nil, nil, nil, nil, nil, "g"]
   end
+
+  test "expand empty test" do
+    assert Blocks.expand([]) == []
+  end
+
+  test "expand one element test" do
+    assert Blocks.expand([{0, "a"}]) == ["a"]
+  end
+
+  test "expand negative index test" do
+    assert_raise RuntimeError, fn ->
+      Blocks.expand([{-2, "a"}])
+    end
+  end
 end

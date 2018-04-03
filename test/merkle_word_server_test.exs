@@ -2,10 +2,6 @@ defmodule MerkleWordServerTest do
   use ExUnit.Case, async: false
   doctest MerkleWordServer
 
-  test "greets the world" do
-    assert MerkleWordServer.hello() == :world
-  end
-
   test "handle reset" do
     assert MerkleWordServer.handle_call({:reset, "123"}) == {:reset, "123"}
   end

@@ -2,6 +2,14 @@
 
 Validates messages sent as merkle proofs.
 
+## Install Deps
+
+Install deps to get merkle tree lib:
+
+```
+mix deps.get
+```
+
 ## Testing
 
 To run tests do:

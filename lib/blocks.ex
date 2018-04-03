@@ -1,6 +1,8 @@
 defmodule MerkleWordServer.Blocks do
   use Agent
 
+  alias MerkleWordServer.Validator, as: Validator
+
   @doc """
   Convert map of blocks to a list of sorted tuples.
   """
@@ -42,6 +44,9 @@ defmodule MerkleWordServer.Blocks do
   """
   def expand(a, i, prev_idx) do
     curr_idx = index(a, i)
+
+    Validator.validate_index(curr_idx)
+
     diff_idx = curr_idx - prev_idx
     curr_val = val(a, i)
 
@@ -82,17 +87,18 @@ defmodule MerkleWordServer.Blocks do
   end
 
   @doc """
-  Gets a value from the `blocks` by `key`.
+  Gets a value from the `blocks` by `index`.
   """
-  def get(blocks, key) do
-    Agent.get(blocks, &Map.get(&1, key))
+  def get(blocks, index) do
+    Agent.get(blocks, &Map.get(&1, index))
   end
 
   @doc """
-  Puts the `value` for the given `key` in the `blocks`.
+  Puts the `block` for the given `index` in the `blocks`.
   """
-  def put(blocks, key, value) do
-    Agent.update(blocks, &Map.put(&1, key, value))
+  def put(blocks, index, block) do
+    Validator.validate_index(index)
+    Agent.update(blocks, &Map.put(&1, index, block))
   end
 
   @doc """
